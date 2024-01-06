@@ -1,0 +1,12 @@
+URL: /
+Timestamp: Fri Jan 05 2024 17:04:33 GMT+0100 (Mitteleuropäische Normalzeit)
+
+URL: /favicon.ico
+Timestamp: Fri Jan 05 2024 17:04:33 GMT+0100 (Mitteleuropäische Normalzeit)
+
+URL: /documentation
+Timestamp: Fri Jan 05 2024 17:04:44 GMT+0100 (Mitteleuropäische Normalzeit)
+
+URL: /favicon.ico
+Timestamp: Fri Jan 05 2024 17:04:44 GMT+0100 (Mitteleuropäische Normalzeit)
+
