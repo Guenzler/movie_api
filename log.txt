@@ -1,9 +1,15 @@
-
-::ffff:127.0.0.1 - GET / HTTP/1.1 304 - - 0.458 ms
-::ffff:127.0.0.1 - GET /movies HTTP/1.1 304 - - 0.636 ms
-::ffff:127.0.0.1 - GET /documentation.html HTTP/1.1 304 - - 1.046 ms
-::1 - GET / HTTP/1.1 304 - - 8.218 ms
-::1 - GET /favicon.ico HTTP/1.1 404 150 - 7.214 ms
-::1 - GET /movies HTTP/1.1 304 - - 3.767 ms
-::1 - GET /documentation.html HTTP/1.1 304 - - 3.484 ms
-::ffff:127.0.0.1 - GET /movies HTTP/1.1 304 - - 1.109 ms
+::1 - GET /movies HTTP/1.1 200 2301 - 1.033 ms
+::1 - GET /movies/Casablanca HTTP/1.1 200 793 - 0.812 ms
+::1 - GET /genre/Drama HTTP/1.1 404 150 - 1.968 ms
+::1 - GET /movies/genre/Drama HTTP/1.1 200 373 - 0.753 ms
+::1 - GET /movies/directors/Charles%20Chaplin HTTP/1.1 200 127 - 3.264 ms
+::1 - POST /users HTTP/1.1 201 156 - 0.565 ms
+::1 - PUT /users/2 HTTP/1.1 200 128 - 0.592 ms
+::1 - POST /users/1/Casablanca HTTP/1.1 400 26 - 1.170 ms
+::1 - POST /users/2/Casablanca HTTP/1.1 200 55 - 0.321 ms
+::1 - POST /users/1/Casablanca HTTP/1.1 200 55 - 3.328 ms
+::1 - DELETE /users/1/Casablanca HTTP/1.1 200 59 - 0.624 ms
+::1 - DELETE /users/1 HTTP/1.1 200 49 - 0.574 ms
+::1 - GET /users/2/favoriteMovies HTTP/1.1 200 14 - 2.379 ms
+::1 - GET /documentation.html HTTP/1.1 304 - - 4.358 ms
+::1 - GET /styles.css HTTP/1.1 304 - - 1.077 ms

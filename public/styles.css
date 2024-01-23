@@ -1,0 +1,43 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #f4f6f5;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #070808;
+}
+
+.page-background {
+    max-width: 1200px;
+    min-height: 100vh;
+    margin: 0 auto;
+}
+
+table {
+    max-width: 100%;
+    background-color: #fff;
+}
+
+td,
+th {
+    padding: 4px 8px;
+    text-align: left;
+    vertical-align: top;
+}
+
+th {
+    background-color: #6e6e6e;
+    color: white;
+    font-weight: bold;
+}
+
+tr:nth-child(even) {
+    background-color: #e2e0e0;
+}
+
+code {
+
+    white-space: pre-wrap;
+
+}
