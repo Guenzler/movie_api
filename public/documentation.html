@@ -44,8 +44,6 @@
                         Example:
                         <code>
 {
-    "Title": "Casablanca",
-    "Description": "Sample description",
     "Genre": {
         "Name": "Drama",
         "Description": "sample description"
@@ -53,10 +51,13 @@
     "Director": {
         "Name": "Michael Curtiz",
         "Bio": "Example text",
-        "Birth": "1886-12-24",
-        "Death": "1962-04-10"
+        "Birthdate": "1886-12-24T00:00:00.000Z",
+        "Deathdate": "1962-04-10T00:00:00.000Z"
     },
-    "ImageURL": "sampleurl.jpg",
+    "_id": "0908098988098089",
+    "Title": "Casablanca",
+    "Description": "Sample description",
+    "ImagePath": "sampleurl.jpg",
     "Featured": false
     }
                     </code>
@@ -89,8 +90,8 @@
 {
     "Name": "Charles Chaplin",
     "Bio": "Sample text",
-    "Birth": "1889-04-16",
-    "Death": "1977-12-25"
+    "Birthdate": "1889-04-16T00:00:00.000Z",
+    "Deathdate": "1977-12-25T00:00:00.000Z"
 }
                     </code>
                     </td>
@@ -102,48 +103,50 @@
                     <td>A JSON object holding data about the user to add, structured like:
                         <code>
 {
-    "name": "Patricia",
-    "password": "somePassword",
-    "email": "someEmail",
-    "dateOfBirth": "2001-08-01"
+    "username": "Patricia", 
+    "password": "somePassword", 
+    "email": "someEmail", 
+    "birthdate": "2001-08-01"
 }
-                    </code>
+                    </code><br>
+                    required fields: username, password and email
                     </td>
                     <td>A JSON object holding data about the user that was added, including ID. Example:
                         <code>
 {
-    "name": "Patricia",
+    "username": "Patricia",
     "password": "somePassword",
     "email": "someEmail",
-    "dateOfBirth": "2001-08-01",
-    "id": "ce3d7bcb-952b-498d-a7fc-86588ea9126b",
-    "favoriteMovies": []
+    "birthdate": "2001-08-01T00:00:00.000Z",
+    "favoriteMovies": [],
+    "_id": "ce3d7bcb-952b-498d-"
 }
                     </code>
                     </td>
                 </tr>
                 <tr>
                     <td>Allow users to update their user info</td>
-                    <td>/users/[userId]</td>
+                    <td>/users/[username]<br><br>Use the old username here! <br>A new username can be <br>specified in the body</td>
                     <td>PUT</td>
                     <td>A JSON object holding data about the user which needs to be updated, structured like:
                         <code>
 {
-    "name": "Frank",
+    "username": "Frank",
     "password": "somePassword",
     "email": "someEmail",
-    "dateOfBirth": "1964-07-22"
+    "birthdate": "1964-07-22"
 }
-                    </code>
+                    </code><br>
+                    required fields: username, password and email
                     </td>
                     <td>A JSON object holding data about the updated user information. Example:
                         <code>
 {
-    "id": 3,
-    "name": "Frank",
+    "_id": "340450385",
+    "username": "Frank",
     "password": "somePassword",
     "email": "someEmail",
-    "dateOfBirth": "1964-07-22",
+    "birthdate": "1964-07-22T00:00:00.000Z",
     "favoriteMovies": []
 }
                     </code>
@@ -151,34 +154,44 @@
                 </tr>
                 <tr>
                     <td>Allow users to add a movie to their list of favorites</td>
-                    <td>/users/[userId]/[MovieTitle]</td>
+                    <td>/users/[Username]/[MovieID]</td>
                     <td>POST</td>
                     <td>None</td>
-                    <td>Text message indicating that the movie was added to list of favorites
+                    <td>JSON object holding data about the updated user information. Example:
+                        <code>
+{
+    "_id": "340450385",
+    "username": "Frank",
+    "password": "somePassword",
+    "email": "someEmail",
+    "birthdate": "1964-07-22T00:00:00.000Z",
+    "favoriteMovies": [ "65ba6bcee7596f8ddd6bbd67" ]
+}
+                    </code>
                     </td>
                 </tr>
                 <tr>
                     <td>Allow users to remove a movie from their list of favorites</td>
-                    <td>/users/[userId]/[MovieTitle]</td>
+                    <td>/users/[Username]/[MovieID]</td>
                     <td>DELETE</td>
                     <td>None</td>
                     <td>Text message indicating that the movie was removed
                     </td>
                 </tr>
                 <tr>
+                    <td>Show list of favorite movies to user</td>
+                    <td>/users/[Username]/favoriteMovies</td>
+                    <td>GET</td>
+                    <td>None</td>
+                    <td>Array containing the ID's of the favorite movies of user</td>
+                </tr>
+                <tr>
                     <td>Allow existing users to deregister</td>
-                    <td>/users/[userId]</td>
+                    <td>/users/[Username]</td>
                     <td>DELETE</td>
                     <td>None</td>
                     <td>Text message indicating whether deregistration was successful</td>
-                </tr>
-                <tr>
-                    <td>Show list of favorite movies to user</td>
-                    <td>/users/[userId]/favoriteMovies</td>
-                    <td>GET</td>
-                    <td>None</td>
-                    <td>Array containing the titles of users favorite movies</td>
-                </tr>
+                </tr>      
             </tbody>
         </table>
     </div>
