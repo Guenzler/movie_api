@@ -72,3 +72,10 @@
 ::1 - POST /login?username=ros&password=anotherpassword HTTP/1.1 400 70 - 4.502 ms
 ::1 - POST /login?username=rose&password=anotherpassword HTTP/1.1 400 70 - 7.960 ms
 ::1 - POST /login?username=Rose&password=anotherpassword HTTP/1.1 200 663 - 5.829 ms
+::1 - POST /users HTTP/1.1 201 224 - 144.274 ms
+::1 - POST /login?username=Marcus&password=password1 HTTP/1.1 400 34 - 213.567 ms
+::1 - POST /login?username=Marcus&password=password1 HTTP/1.1 400 34 - 40.557 ms
+::1 - POST /login?username=Marcus&password=password1 HTTP/1.1 200 689 - 133.244 ms
+::1 - GET /movies HTTP/1.1 200 8237 - 22.315 ms
+::1 - PUT /users/Marcus HTTP/1.1 200 224 - 105.088 ms
+::1 - POST /login?username=Marcus&password=newPassword HTTP/1.1 200 689 - 93.807 ms

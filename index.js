@@ -3,6 +3,8 @@ const Models = require('./models.js');
 
 const Movies = Models.Movie;
 const Users = Models.User;
+const cors = require('cors');
+const { check, validationResult } = require('express-validator');
 
 mongoose.connect('mongodb://localhost:27017/movieDB');
 
@@ -28,6 +30,22 @@ app.use(express.static('public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use(cors());
+
+/*
+let allowedOrigins = ['http://localhost:8080', 'https://localhost:8080', 'http://testsite.com', 'https://testsite.com'];
+app.use(cors({
+  origin: (origin, callback) => {
+    if(!origin) return callback(null, true);
+    if(allowedOrigins.indexOf(origin) === -1){ // If a specific origin isn’t found on the list of allowed origins
+      let message = 'The CORS policy for this application doesn’t allow access from origin ' + origin;
+      return callback(new Error(message ), false);
+    }
+    return callback(null, true);
+  }
+}));
+*/
+
 let auth = require('./auth')(app);
 const passport = require('passport');
 require('./passport');
@@ -42,6 +60,7 @@ require('./passport');
 }*/
 
 app.post('/users', async (req, res) => {
+  let hashedPassword = Users.hashPassword(req.body.password);
   await Users.findOne({ username: req.body.username }) //check if user already exists
     .then((user) => {
       if (user) {
@@ -50,7 +69,7 @@ app.post('/users', async (req, res) => {
         Users
           .create({
             username: req.body.username,
-            password: req.body.password,
+            password: hashedPassword,
             email: req.body.email,
             birthdate: req.body.birthdate
           })
@@ -77,6 +96,8 @@ app.post('/users', async (req, res) => {
 }*/
 app.put('/users/:username', passport.authenticate('jwt', { session: false }), async (req, res) => {
 
+  let hashedPassword = Users.hashPassword(req.body.password);
+
   // check if username matches the user saved in token
   if (req.user.username !== req.params.username) {
     return res.status(400).send('Permission denied');
@@ -86,7 +107,7 @@ app.put('/users/:username', passport.authenticate('jwt', { session: false }), as
     $set:
     {
       username: req.body.username,
-      password: req.body.password,
+      password: hashedPassword,
       email: req.body.email,
       birthdate: req.body.birthdate
     }
