@@ -14,7 +14,7 @@ passport.use(
             passwordField: 'password',
         }, // username and password are the fields within HTML form, if they are named different, this can be specified here
         async (username, password, callback) => {
-            console.log(username, password);
+            console.log('checking credentials for ' + username);
             await Users.findOne({ username: username })
                 .then((user) => {
                     if (!user) {
@@ -27,7 +27,7 @@ passport.use(
                         console.log('incorrect password');
                         return callback(null, false, { message: 'Incorrect password.' });
                     }
-                    console.log('finished');
+                    console.log('finished login successful');
                     return callback(null, user);
                 })
                 .catch((error) => {
@@ -42,7 +42,7 @@ passport.use(
 );
 
 /* the first parameter is an object that specifys 1. how to extract the token from the request and 2. the key for encryption
-then follows the handler which expects the token as its first parameter, the callback funcition as its second parameter */
+ the handler expects the token as its first parameter, the callback funcition as its second parameter */
 
 passport.use(new JWTStrategy({
     jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),

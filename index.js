@@ -30,9 +30,9 @@ app.use(express.static('public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(cors());
+app.use(cors());  //allow requests from all origins
 
-/*
+/* use this part to allow requests only from certain origins
 let allowedOrigins = ['http://localhost:8080', 'https://localhost:8080', 'http://testsite.com', 'https://testsite.com'];
 app.use(cors({
   origin: (origin, callback) => {
@@ -59,32 +59,48 @@ require('./passport');
   birthdate: Date
 }*/
 
-app.post('/users', async (req, res) => {
-  let hashedPassword = Users.hashPassword(req.body.password);
-  await Users.findOne({ username: req.body.username }) //check if user already exists
-    .then((user) => {
-      if (user) {
-        return res.status(400).send('Username ' + req.body.username + ' already exists');
-      } else {
-        Users
-          .create({
-            username: req.body.username,
-            password: hashedPassword,
-            email: req.body.email,
-            birthdate: req.body.birthdate
-          })
-          .then((newUser) => { res.status(201).json(newUser) })
-          .catch((error) => {
-            console.error(error);
-            res.status(500).send('Error: ' + error);
-          })
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-      res.status(500).send('Error: ' + error);
-    });
-});
+app.post('/users',
+  //Validation logic here
+  [
+    check('username', 'Username is required and must contain at least 5 characters').isLength({ min: 5 }),
+    check('username', 'Username must only contain alphanumeric characters').isAlphanumeric(),
+    check('password', 'Password is required and must be between 5 and 15 characters long').isLength({ min: 5, max: 15 }),
+    check('email', 'Email does not appear to be valid').isEmail()
+  ],
+  async (req, res) => {
+
+    //check the validation object for errors
+    let errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+
+    let hashedPassword = Users.hashPassword(req.body.password);
+    await Users.findOne({ username: req.body.username }) //check if user already exists
+      .then((user) => {
+        if (user) {
+          return res.status(400).send('Username ' + req.body.username + ' already exists');
+        } else {
+          Users
+            .create({
+              username: req.body.username,
+              password: hashedPassword,
+              email: req.body.email,
+              birthdate: req.body.birthdate
+            })
+            .then((newUser) => { res.status(201).json(newUser) })
+            .catch((error) => {
+              console.error(error);
+              res.status(500).send('Error: ' + error);
+            })
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        res.status(500).send('Error: ' + error);
+      });
+  });
 
 //update user information, by old username
 /* expect JSON in this format
@@ -94,33 +110,51 @@ app.post('/users', async (req, res) => {
   email: String (required),
   birthdate: Date
 }*/
-app.put('/users/:username', passport.authenticate('jwt', { session: false }), async (req, res) => {
+app.put('/users/:username',
+  //Validation logic here
+  [
+    check('username', 'Username is required and must contain at least 5 characters').isLength({ min: 5 }),
+    check('username', 'Username must only contain alphanumeric characters').isAlphanumeric(),
+    check('password', 'Password is required and must be between 5 and 15 characters long').isLength({ min: 5, max: 15 }),
+    check('email', 'Email does not appear to be valid').isEmail()
+  ],
 
-  let hashedPassword = Users.hashPassword(req.body.password);
+  passport.authenticate('jwt', { session: false }),
 
-  // check if username matches the user saved in token
-  if (req.user.username !== req.params.username) {
-    return res.status(400).send('Permission denied');
-  }
+  async (req, res) => {
 
-  await Users.findOneAndUpdate({ username: req.params.username }, {
-    $set:
-    {
-      username: req.body.username,
-      password: hashedPassword,
-      email: req.body.email,
-      birthdate: req.body.birthdate
+    //check the validation object for errors
+    let errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
     }
-  },
-    { new: true })
-    .then((updatedUser) => {
-      res.status(200).json(updatedUser);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).send('Error: ' + err);
-    })
-});
+
+    let hashedPassword = Users.hashPassword(req.body.password);
+
+    // check if username matches the user saved in token
+    if (req.user.username !== req.params.username) {
+      return res.status(400).send('Permission denied');
+    }
+
+    await Users.findOneAndUpdate({ username: req.params.username }, {
+      $set:
+      {
+        username: req.body.username,
+        password: hashedPassword,
+        email: req.body.email,
+        birthdate: req.body.birthdate
+      }
+    },
+      { new: true })
+      .then((updatedUser) => {
+        res.status(200).json(updatedUser);
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+      })
+  });
 
 // Add a movie to a user's list of favorites
 app.post('/users/:Username/:MovieID', passport.authenticate('jwt', { session: false }), async (req, res) => {
