@@ -6,7 +6,8 @@ const Users = Models.User;
 const cors = require('cors');
 const { check, validationResult } = require('express-validator');
 
-mongoose.connect('mongodb://localhost:27017/movieDB');
+//mongoose.connect('mongodb://localhost:27017/movieDB');
+mongoose.connect('process.env.CONNECTION_URI', { useNewUrlParser: true, useUnifiedTopology: true });
 
 const express = require('express'),
   bodyParser = require('body-parser'),
