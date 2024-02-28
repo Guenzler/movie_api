@@ -18,13 +18,14 @@ const express = require('express'),
 
 const app = express();
 
-const accessLogStream = fs.createWriteStream(path.join(__dirname, 'log.txt'), { flags: 'a' });
-
 // log to console
 app.use(morgan('common'));
 
+/* disable logging to file for live app
 // log to log.txt
+const accessLogStream = fs.createWriteStream(path.join(__dirname, 'log.txt'), { flags: 'a' });
 app.use(morgan('short', { stream: accessLogStream }));
+*/
 
 app.use(express.static('public'));
 
