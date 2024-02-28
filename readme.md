@@ -14,7 +14,7 @@ bcrypt: Express middleware for password hashing
 body-parser: Express middleware for parsing request bodies.  
 express-validator: Middleware for input validation in Express.  
 jsonwebtoken: Library for JWT ( JSON Web Token) generation and verification  
-morgan: EHtp request logger middleware for Node.js  
+morgan: request logger middleware for Node.js  
 passport: Authentication middleware for Node.js.  
 passport-jwt: Passport strategy for JWT authentication.  
 passport-local: Passport strategy for username/password authentication.
@@ -26,6 +26,9 @@ Follow the instructions in documentation.html to register
 
 After registration, login with username and password to  
 POST /login  
+Keys username and password must be in lowercase  
+username: yourUsername  
+password: yourPassword  
 
 After successful login, you will obtain a token  
 Token must be sent as bearer token in authorization header with each request
