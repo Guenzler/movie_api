@@ -5,13 +5,14 @@ const Movies = Models.Movie;
 const Users = Models.User;
 const cors = require('cors');
 const { check, validationResult } = require('express-validator');
+let swaggerJsdoc = require('swagger-jsdoc'),
+ swaggerUi = require('swagger-ui-express');
 
 //mongoose.connect('mongodb://localhost:27017/movieDB');
 mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 const express = require('express'),
   bodyParser = require('body-parser'),
-  uuid = require('uuid'),
   morgan = require('morgan'),
   fs = require('fs'),
   path = require('path');
@@ -51,6 +52,22 @@ app.use(cors({
 let auth = require('./auth')(app);
 const passport = require('passport');
 require('./passport');
+
+// ------ Configure swagger docs ------
+var options = {
+  swaggerDefinition: {
+    openapi: "3.1.0",
+    info: {
+      title: "My Movie API",
+      version: "1.0.0",
+      description: "Server side component of web application that will allow users register, login, update user information and deregister. Registered users will be able to access information about movies",
+    },
+  },
+  apis: ["./swagger.yaml"],
+};
+var swaggerSpecs = swaggerJsdoc(options);
+
+app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 
 // Add new user
 /* expect JSON in this format
@@ -112,6 +129,7 @@ app.post('/users',
   email: String (required),
   birthdate: Date
 }*/
+
 app.put('/users/:username',
   //Validation logic here
   [

@@ -1,0 +1,475 @@
+components:
+   securitySchemes:
+     bearerAuth:
+       type: http
+       scheme: bearer
+   schemas:
+     User:
+       type: object
+       required:
+         - username
+         - password
+         - email
+       properties:
+         _id:
+           type: string
+           description: The auto-generated id of the user
+         username:
+           type: string
+           minLength: 5
+           description: username of the user, must be unique
+         password:
+           type: string
+           minLength: 5
+           maxLength: 15
+           format: password
+           description: password of user, will be hashed before storing in database
+         email:
+           type: string
+           format: email
+           description: email adress of user
+         birthdate:
+           type: string
+           format: date
+           description: Date of birth of user
+         favoriteMovies:
+           type: array
+           items:
+             type: string
+           description: an array of the IDs of the favorite movies of user, array will be created after registration
+       example:
+         _id: 65ed84582b4290808504
+         username: 'someusername'
+         password: 'slajflsdjfslkjalsjalsdjlsadjfl'
+         email: 'some@email.com'
+         birthdate: ISODate('2001-08-01T00:00:00.000Z')
+         favoriteMovies: [ ObjectId('65ba6bcee7596f8ddd6bbd67') ]
+     Movie:
+       type: object
+       required:
+         - Title
+         - Description
+       properties:
+         _id:
+           type: string
+           description: auto-generated id of the movie
+         Title:
+           type: string
+           description: Title of movie
+         Description:
+           type: string
+           description: Description of movie
+         Genre:
+           type: object
+           properties:
+             Name: 
+               type: string
+             Description: 
+               type: string
+           description: general information of genre
+         Director:
+           type: object
+           properties:
+             Name:
+               type: string
+             Bio:
+               type: string
+             Birthdate:
+               type: string
+               format: date
+             Deathdate:
+               type: string
+               format: date
+           description: information about movie director
+         ImagePath:
+           type: string
+           description: path to an image about this movie
+         Featured:
+           type: boolean
+           description: This field stores information whether the movie is featured
+       example:
+         _id: 20348203482384823
+         Title: 'Lady Bird'
+         Description: 'Coming-of-age drama following the life of a high school senior.'
+         Genre: 
+           Name: 'Comedy'
+           Description: 'Movies that aim to amuse and entertain'
+         Director: 
+           Name: 'Greta Gerwig'
+           Bio: 'Talented director and actress, known for Lady Bird and Little Women.'
+           Birthdate: ISODate('1983-08-04T00:00:00.000Z')
+           Deathdate: null
+         ImagePath: 'https://somepath.jpeg'
+         Featured: false
+
+/:
+  get:
+     description: Returns a text welcome message
+     responses:
+          200:
+              description: text welcome messsage
+
+/users:
+  post:
+    tags: [users]
+    summary: User registration
+    description: Allow user to register
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/User'
+          example: 
+            username: MyUsername
+            password: string
+            email: my@email.com
+            birthdate: 1998-08-01
+    responses:
+      201:
+        description: created user is returned
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      500:
+        description: some error occured
+          
+/movies:
+  get:
+    tags: [movies]
+    summary: Get list of all movies
+    description: |
+      Get a list of all movies in database
+      Requires a valid JWT token to be included in the request headers as a bearer token.
+    security:
+      - bearerAuth: []
+    responses:
+      '200':
+        description: a list of all movies
+        content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Movie'
+      '401':
+          description: Unauthorized - Missing or invalid JWT token
+      '500':
+        description: Internal server error
+
+/login:
+  post:
+    tags: [users]
+    summary: User login
+    description: Logs a user into the application.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+                description: The username of the user.
+              password:
+                type: string
+                description: The password of the user.
+            required:
+              - username
+              - password
+    responses:
+      '200':
+        description: User successfully logged in
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  $ref: '#/components/schemas/User'
+                  description: The logged-in user's information.
+                token:
+                  type: string
+                  description: Access token for the authenticated user.
+      '400':
+        description: Validation error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                errors:                 
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                      description: message about cause of the error
+                    user:
+                      type: object
+                      description: the provided login information of user
+      '500':
+        description: Internal server error
+
+/users/{username}:
+  put:
+    tags: [users]
+    summary: Update user information
+    description: |
+      Updates user information for the specified username.
+      Requires a valid JWT token to be included in the request headers as a bearer token.
+    parameters:
+      - in: path
+        name: username
+        required: true
+        schema:
+          type: string
+        description: The username of the user to update.
+    security:
+      - bearerAuth: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/User'
+          example: 
+            username: MyUsername
+            password: string
+            email: my@email.com
+    responses:
+      '200':
+        description: User information successfully updated
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      '401':
+        description: Unauthorized
+      '500':
+        description: Internal server error
+
+/users/{Username}:
+  delete:
+    tags: [users]
+    summary: Deregister User
+    description: |
+      Deletes the specified user account.
+      Requires a valid JWT token to be included in the request headers as a bearer token.
+    parameters:
+      - in: path
+        name: Username
+        required: true
+        schema:
+          type: string
+        description: The username of the user to deregister.
+    security:
+      - bearerAuth: []
+    responses:
+      '200':
+        description: User successfully deleted
+      '400':
+        description: Permission denied or user not found
+      '401':
+        description: Unauthorized - Missing or invalid JWT token
+      '500':
+        description: Internal server error
+
+/users/{Username}/{MovieID}:
+  post:
+    tags: [users]
+    summary: Add movie to users list of favorites
+    description: Adds the specified movie to the user's list of favorite movies.
+    parameters:
+      - in: path
+        name: Username
+        required: true
+        schema:
+          type: string
+        description: The username of the user.
+      - in: path
+        name: MovieID
+        required: true
+        schema:
+          type: string
+        description: The ID of the movie to add to favorites.
+    security:
+      - bearerAuth: []
+    responses:
+      '200':
+        description: Movie successfully added to favorites
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      '400':
+        description: Permission denied or error adding movie to favorites
+      '401':
+        description: Unauthorized - Missing or invalid JWT token
+      '500':
+        description: Internal server error
+
+  delete:
+    tags: [users]
+    summary: Remove movie from users list of favorites
+    description: Removes the specified movie from the user's list of favorite movies.
+    parameters:
+      - in: path
+        name: Username
+        required: true
+        schema:
+          type: string
+        description: The username of the user.
+      - in: path
+        name: MovieID
+        required: true
+        schema:
+          type: string
+        description: The ID of the movie to remove from favorites.
+    security:
+      - bearerAuth: []
+    responses:
+      '200':
+        description: Movie successfully removed from favorites
+      '400':
+        description: Permission denied, user not found, or error removing movie from favorites
+      '401':
+        description: Unauthorized - Missing or invalid JWT token
+      '500':
+        description: Internal server error
+
+/users/{Username}/favoriteMovies:
+  get:
+    tags: [users]
+    summary: Get Favorite Movies
+    description: Retrieves a list of a user's favorite movies.
+    parameters:
+      - in: path
+        name: Username
+        required: true
+        schema:
+          type: string
+        description: The username of the user whose favorite movies are to be retrieved.
+    security:
+      - bearerAuth: []
+    responses:
+      '200':
+        description: List of favorite movies successfully retrieved
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+              description: List of movie IDs representing the user's favorite movies.
+      '400':
+        description: User not found
+      '401':
+        description: Unauthorized - Missing or invalid JWT token
+      '500':
+        description: Internal server error
+
+/movies/genre/{genreName}:
+    get:
+      tags: [movies]
+      summary: Get Genre Description
+      description: Retrieves the description of a genre by its name.
+      parameters:
+        - in: path
+          name: genreName
+          required: true
+          schema:
+            type: string
+          description: The name of the genre to retrieve.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Genre description successfully retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Name:
+                    type: string
+                    description: The name of the genre.
+                  Description:
+                    type: string
+                    description: The description of the genre.
+        '404':
+          description: Genre not found
+        '401':
+          description: Unauthorized - Missing or invalid JWT token
+        '500':
+          description: Internal server error
+
+/movies/directors/{directorName}:
+    get:
+      tags: [movies]
+      summary: Get Director Information
+      description: Retrieves information about a movie director by their name.
+      parameters:
+        - in: path
+          name: directorName
+          required: true
+          schema:
+            type: string
+          description: The name of the director to retrieve information about.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Director information successfully retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Name:
+                    type: string
+                    description: The name of the director.
+                  Bio:
+                    type: string
+                    description: The biography of the director.
+                  Birthdate:
+                    type: string
+                    description: The date of birth of the director
+                  Deathdate:
+                    type: string
+                    description: The date of death of the director
+        '404':
+          description: Director not found
+        '401':
+          description: Unauthorized - Missing or invalid JWT token
+        '500':
+          description: Internal server error
+
+/movies/{title}:
+    get:
+      tags: [movies]
+      summary: Get Movie by Title
+      description: Retrieves a movie by its title.
+      parameters:
+        - in: path
+          name: title
+          required: true
+          schema:
+            type: string
+          description: The title of the movie to retrieve.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Movie successfully retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movie'
+        '404':
+          description: Movie not found
+        '401':
+          description: Unauthorized - Missing or invalid JWT token
+        '500':
+          description: Internal server error

@@ -4,7 +4,7 @@
 This API is the server-side component of a web application that will provide users with access to information about different movies, directors, and genres. Users will be able to sign up, update their personal information, and create a list of their favorite movies.
 
 ## Endpoint documentation
-See documentation.html in the public folder of the repository
+See /swagger/
 
 ## Dependencies
 Node.js: JavaScript runtime environment  
@@ -17,7 +17,10 @@ jsonwebtoken: Library for JWT ( JSON Web Token) generation and verification
 morgan: request logger middleware for Node.js  
 passport: Authentication middleware for Node.js.  
 passport-jwt: Passport strategy for JWT authentication.  
-passport-local: Passport strategy for username/password authentication.
+passport-local: Passport strategy for username/password authentication. 
+swagger-jsdoc: library that reads JSDoc annotated source code and gereantes an OPen API specification
+swagger-ui-express: Express middleware for auto-generating swager-ui generated API docs
+
 
 ## Authentication
 
