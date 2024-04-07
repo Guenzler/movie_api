@@ -211,7 +211,7 @@ app.delete('/users/:Username/:MovieID', passport.authenticate('jwt', { session: 
     { new: true })
     .then((updatedUser) => {
       if (updatedUser) {
-        res.status(200).send('Movie with ID ' + req.params.MovieID + 'was successfully deleted from favorite movie list');
+        res.status(200).json(updatedUser);
       } else {
         res.status(400).send("User not found");
       }
