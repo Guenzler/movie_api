@@ -332,6 +332,10 @@ components:
     responses:
       '200':
         description: Movie successfully removed from favorites
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
       '400':
         description: Permission denied, user not found, or error removing movie from favorites
       '401':

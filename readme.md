@@ -2,9 +2,10 @@
 
 ## Project description
 This API is the server-side component of a web application that will provide users with access to information about different movies, directors, and genres. Users will be able to sign up, update their personal information, and create a list of their favorite movies.
+The project is currently online at https://movie-app-2024-716106e34297.herokuapp.com/
 
 ## Endpoint documentation
-See /swagger/
+See https://movie-app-2024-716106e34297.herokuapp.com/swagger/
 
 ## Dependencies
 Node.js: JavaScript runtime environment  
