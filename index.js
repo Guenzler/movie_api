@@ -36,7 +36,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //app.use(cors());  //allow requests from all origins
 
 /* use this part to allow requests only from certain origins  */
-let allowedOrigins = ['http://localhost:8080', 'https://localhost:8080', 'http://localhost:1234', 'https://localhost:1234', 'https://guenzler.net/movieapp-angular', 'https://movie-app-483832.netlify.app'];
+let allowedOrigins = ['http://localhost:8080', 'https://localhost:8080', 'http://localhost:1234', 'https://localhost:1234', 'https://guenzler.net/movieapp-angular', 'https://movie-app-483832.netlify.app', 'https://guenzler.net'];
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin) return callback(null, true);
