@@ -40,7 +40,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
  * @name allowedOrigins
  * @type {string[]}
  */
-let allowedOrigins = ['http://localhost:8080', 'https://localhost:8080', 'https://guenzler.net/movieapp-angular', 'https://movie-app-483832.netlify.app', 'https://guenzler.net'];
+let allowedOrigins = ['http://localhost:8080', 'https://localhost:8080', 'https://movie-app-483832.netlify.app', 'https://guenzler.net', 'https://movieapp.guenzler.net'];
 /**
  * CORS configuration 
  * @name configCORS
