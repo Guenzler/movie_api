@@ -1,4 +1,5 @@
 const jwtSecret = process.env.JWT_SECRETKEY; // This has to be the same key used in the JWTStrategy
+//const jwtSecret = 'blablabla'; //for local testing
 
 const jwt = require('jsonwebtoken'),
     passport = require('passport');
@@ -41,10 +42,3 @@ module.exports = (router) => {
         })(req, res);
     });
 }
-
-
-/* with the command passport.authenticate(...) the passport strategy is called and executed; 'local' meaning the localStrategy
-passport.authenticate is middleware function and takes the login data from the req.body
-It then authenticates the user and calls the callback function with the parameters (null, false, {message: Incorrect username or password.'}) if the username doesn't exist, 
-the paramters (null, user) if it finds the user, and (error) if there is an unspecified error. 
-About login: passport exposes a login(user, function()) function on req that can be used to establish a login session. when the login operation completes, user will be assigned to req.user */
