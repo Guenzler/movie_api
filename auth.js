@@ -1,5 +1,5 @@
-//const jwtSecret = process.env.JWT_SECRETKEY; // This has to be the same key used in the JWTStrategy
-const jwtSecret = 'blablabla'; //for local testing
+const jwtSecret = process.env.JWT_SECRETKEY; // This has to be the same key used in the JWTStrategy
+//const jwtSecret = 'blablabla'; //for local testing
 
 const jwt = require('jsonwebtoken'),
     passport = require('passport');

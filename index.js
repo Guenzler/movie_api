@@ -8,8 +8,8 @@ const { check, validationResult } = require('express-validator');
 let swaggerJsdoc = require('swagger-jsdoc'),
   swaggerUi = require('swagger-ui-express');
 
-mongoose.connect('mongodb://localhost:27017/movieDB'); //for local testing
-//mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+//mongoose.connect('mongodb://localhost:27017/movieDB'); //for local testing
+mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 const express = require('express'),
   bodyParser = require('body-parser'),
