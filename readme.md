@@ -36,3 +36,6 @@ password: yourPassword
 
 After successful login, you will obtain a token  
 Token must be sent as bearer token in authorization header with each request
+
+## Changelog
+v 1.0.1 Update express, express-validator and swagger-ui-express
